@@ -1,0 +1,28 @@
+#Elgg-Version to use
+ELGG_VERSION="5.1.0"
+# Mysql-DB Container Parameter
+MYSQL_ROOT_PASSWORD="password"
+MYSQL_DATABASE="elgg"
+MYSQL_USER="elgg"
+MYSQL_PASSWORD="elgg"
+MYSQL_LOG_CONSOLE="true"
+# Elgg-App Container Parameter
+## Elgg Databasesettings
+ELGG_DB_USER="elgg"
+ELGG_DB_PASS="elgg"
+ELGG_DB_HOST="elgg-db"
+ELGG_DB_NAME="elgg"
+ELGG_DB_PORT="3306"
+ELGG_DB_PREFIX="elgg_"
+# Elgg Admin-Account
+ELGG_USERNAME="admin"
+ELGG_PASSWORD="admin-password"
+ELGG_DISPLAY_NAME="Admin"
+ELGG_EMAIL="adminmail@yourelgg.com"
+# Elggsite-Settings
+ELGG_WWW_ROOT="http://localhost/"
+ELGG_SITE_NAME="My Elgg Site"
+ELGG_SITE_ACCESS="2"
+# The Elgg Path inside the image. Important, only change this, if you build your image by yourself.
+ELGG_DATA_ROOT="/var/www/data/"
+ELGG_PATH="/var/www/html/"
