@@ -37,6 +37,17 @@ In this commit the actual elgg version **5.1.0** will be installed, but you can 
 > [!NOTE]
 > The Elgg-Site will be available on Port 8980 (by default, of course you can change it) which is mapped on the Port 80 inside the container and http only. If you want to secure your site (and you really should) you can install a reverse proxy server on your host which makes the SSL connection for you and use the backend http://localhost:8980. Make sure the Port 8980 is not available from the internet (firewalling.) If your reverse proxy has a SSL certificate for the domain my-elgg.com (in example) then your elgg parameter `ELGG_WWW_ROOT` should look like `https://my-elgg.com/`. 
 
+## Upgrading elgg
+
++ Stop the container `docker-compose down`
++ Edit the `.env` file and set the new elgg Version.
++ Build a new Image with  `docker-compose build --no-cache`
++ Start the Container  `docker-compose up` or  `docker-compose up -d`
++ Visit http://your-elgg-site.com/upgrade.php
++ That's it
+
+More Information can be found here: https://learn.elgg.org/en/stable/admin/upgrading.html#b-manual-upgrade-legacy-approach
+
 
 ## The .env file in explanation
 
@@ -82,5 +93,8 @@ ELGG_SITE_ACCESS="2"
 ELGG_DATA_ROOT="/var/www/data/"
 ELGG_PATH="/var/www/html/"
 ```
+## Todo's
+
++ Build a Docker-Image and publish it on https://hub.docker.com/ ;)
 
 enjoy your elgg.
