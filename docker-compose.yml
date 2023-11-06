@@ -1,0 +1,88 @@
+version: "3" 
+services:
+
+  elgg-db:
+    container_name: elgg-db
+    restart: always
+    image: mariadb:latest
+    #command: --innodb-read-only-compressed=OFF --transaction-isolation=READ-COMMITTED  --binlog-format=ROW  #Maria-DB fix
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_LOG_CONSOLE: ${MYSQL_LOG_CONSOLE}
+    volumes:
+      - ./elgg-db:/var/lib/mysql
+    networks:
+      - elgg-net
+
+  elgg-phpfpm:
+    build: ./Elgg
+    container_name: elgg-app
+    restart: always
+    volumes:
+      - ./elgg-varhtml:${ELGG_PATH}
+      - ./elgg-vardata:${ELGG_DATA_ROOT}
+      - ./config/zz-docker.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
+      - "phpsocket:/var/run"
+    environment:
+      ELGG_VERSION: ${ELGG_VERSION}
+      ELGG_DB_USER: ${ELGG_DB_USER}
+      ELGG_DB_PASS: ${ELGG_DB_PASS}
+      ELGG_DB_HOST: ${ELGG_DB_HOST}
+      ELGG_DB_NAME: ${ELGG_DB_NAME}
+      ELGG_DB_PORT: ${ELGG_DB_PORT}
+      ELGG_DB_PREFIX: ${ELGG_DB_PREFIX}
+      ELGG_USERNAME: ${ELGG_USERNAME}
+      ELGG_PASSWORD: ${ELGG_PASSWORD}
+      ELGG_DISPLAY_NAME: ${ELGG_DISPLAY_NAME}
+      ELGG_EMAIL: ${ELGG_EMAIL}
+      ELGG_WWW_ROOT: ${ELGG_WWW_ROOT}
+      ELGG_SITE_NAME: ${ELGG_SITE_NAME}
+      ELGG_DATA_ROOT: ${ELGG_DATA_ROOT}
+      ELGG_SITE_ACCESS: ${ELGG_SITE_ACCESS}
+      ELGG_PATH: ${ELGG_PATH}
+    depends_on:
+      elgg-db:
+            condition: service_started
+    networks:
+      - elgg-net
+
+  elgg-nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - 8980:80
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./elgg-varhtml:/var/www/html:ro
+      - "phpsocket:/var/run"
+    depends_on:
+      - elgg-phpfpm
+    networks:
+      - elgg-net
+
+  elgg-redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - elgg-net
+    expose:
+      - 6379
+
+  elgg-memcached:
+    image: memcached:latest
+    restart: always
+    networks:
+      - elgg-net
+    expose:
+      - 11211
+
+networks:
+  elgg-net:
+
+volumes:
+    phpsocket:
+
+
